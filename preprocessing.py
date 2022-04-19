@@ -5,7 +5,7 @@ import glob
 import sys
 import os
 
-IMAGES_DIR = 'images'
+IMAGES_DIR = 'images (training)'
 
 
 def get_images_paths(image_directory, file_extensions: [str]):
@@ -29,7 +29,9 @@ def get_images_paths(image_directory, file_extensions: [str]):
         :param file_extensions:
         :param image_directory:
     """
-    allowed_ext = ['png', 'jpg']
+    if file_extensions is None:
+        file_extensions = ['png']
+    allowed_ext = ['.png', '.jpg']
 
     if not all([(ext.lower() in allowed_ext) for ext in file_extensions]):
         valid = ', '.join(allowed_ext)
@@ -41,7 +43,7 @@ def get_images_paths(image_directory, file_extensions: [str]):
     images_full_path = []
 
     for image in images_path:
-        if image[-3:] in file_extensions:
+        if image[-4:] in file_extensions:
             images_full_path.append(image_directory + os.sep + image)
 
     return images_full_path
@@ -106,12 +108,14 @@ def write_to_file(feature_list, image_paths, output_path):
                 file.write('\n')
 
             sys.stdout.write("\rFile:" + str(i) + "/" + str(len(feature_list)))
-            sys.stdout.flush()
+
             output = image_paths[i]
 
             for feature in feature_list[i]:
                 output += ';' + str(feature)
             file.write(output)
+
+            sys.stdout.flush()
 
 
 def preprocessing_main(image_directory, output_path, file_extensions=(".png", ".jpg")):
@@ -128,4 +132,4 @@ def preprocessing_main(image_directory, output_path, file_extensions=(".png", ".
 
 if __name__ == '__main__':
     preprocessing_main(image_directory=IMAGES_DIR, output_path="static")
-    print("Write complete")
+    print("\nWrite complete")

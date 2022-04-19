@@ -6,7 +6,7 @@ from pathlib import Path
 import csv
 import numpy as np
 
-QUERY_IMAGE = 'images/3223.png'
+QUERY_IMAGE = 'images (training)/1880.png'
 
 class Query:
 
