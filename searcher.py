@@ -4,6 +4,7 @@ import math
 import numpy as np
 from numpy.core import sqrt, add
 from pathlib import Path
+from console_tools import print_progress_bar
 
 
 def square_rooted(x):
@@ -40,7 +41,7 @@ def euclidean_distance(x, y):
     """
     result = 0
 
-    for i in range(len(x)):
+    for i, _ in enumerate(x):
         result += (x[i] - y[i]) ** 2
 
     return sqrt(result)
@@ -169,9 +170,14 @@ class Searcher:
         result = []
 
         with open(self.__path_to_index, "r") as file:
-            content = file.read()
+            content = file.read().split('\n')
 
-            for line in content.split('\n'):
+            for idx, line in enumerate(content):
+                print_progress_bar(iteration=idx,
+                                   total=len(content)-1,
+                                   header='Searching...',
+                                   footer='Search complete!')
+
                 features = line.split(';')
 
                 image_path = features[0]
@@ -180,9 +186,6 @@ class Searcher:
                 feature_list = [float(x) for x in features]
 
                 distance = euclidean_distance(feature_list, query_features)
-
-                if distance == 0 and image_path == '':
-                    print('hello')
 
                 result.append((image_path, distance))
 

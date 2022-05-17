@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-sm-9">
+        <h1 class="page-header">Input image</h1>
+            <img src="{{ url_for('static', filename = 'queries/' + selected_image) }}"
+                 style="max-height: 200px;
+                 width: auto"
+                 alt="">
+        <h1 class="page-header">Query results</h1>
+    </div>
+</div>
+<<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Picture</th>
+            <th scope="col">IRMA Info</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for image in query_results %}
+        <tr>
+            <th>{{ loop.index }}</th>
+            <td>
+                <img src="{{url_for('static', filename=image[0])}}"
+                     style="max-height: 200px;
+                     width: auto"
+                     alt=""
+                     onclick="click_on_image(this)">
+            </td>
+            <td>
+                {% for info in image[1] %}
+                    {% set header,footer = info.split(':') %}
+                    <h5>{{ header }}:</h5> {{ footer }} <br>
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}

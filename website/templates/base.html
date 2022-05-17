@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}Medical information retrieval{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body style="background-color: aliceblue">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="/static/assets/uni_logo.png" width="auto" height="30" alt="empty">
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" id="select_image" href="/">Select image</a>
+                <a class="nav-item nav-link" id="query_result" href="/query_result">Query results</a>
+                <a class="nav-item nav-link" id="settings" href="/settings">Settings</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Top banner
+    banner/header with a logo in first three columns, project name in six columns and
+    university logo in last three columns -->
+    <div class="jumbotron text-center" style="height: 250px;margin-bottom:0">
+        <div class="row">
+            <div class="col-md-3"> <img src="{{ url_for('static', filename = 'assets/retrieval_logo.png')}}" style="max-height: 150px; width: auto" alt=""> </div>
+            <div class="col-md-6"><h2>Medical Information Retrieval</h2></div>
+            <div class="col-md-3"> <img src="{{ url_for('static', filename = 'assets/uni_logo.png')}}" style="max-height: 150px; width: auto" alt=""> </div>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif category == 'success' %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+</body>
+
+</html>

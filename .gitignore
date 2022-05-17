@@ -1,5 +1,5 @@
 # Project exclude paths
 /venv/
-/images (test)/
-/images (full)/
-/test.py
+/website/static/data/images/test/
+/website/static/data/images/full/
+/test/test/test.py

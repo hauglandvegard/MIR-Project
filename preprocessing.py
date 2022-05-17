@@ -4,8 +4,9 @@ import numpy as np
 import glob
 import sys
 import os
+from console_tools import *
 
-IMAGES_DIR = 'images (training)'
+IMAGES_DIR = 'website/static/data/images/training'
 
 
 def get_images_paths(image_directory, file_extensions: [str]):
@@ -31,20 +32,20 @@ def get_images_paths(image_directory, file_extensions: [str]):
     """
     if file_extensions is None:
         file_extensions = ['png']
-    allowed_ext = ['.png', '.jpg']
+    allowed_ext = ['png', 'jpg']
 
     if not all([(ext.lower() in allowed_ext) for ext in file_extensions]):
         valid = ', '.join(allowed_ext)
         print(f'Invalid extension in list {file_extensions}. Valid extensions are: {valid}')
         return []
 
-    images_path = os.listdir(image_directory)
+    images_paths = os.listdir(image_directory)
 
     images_full_path = []
 
-    for image in images_path:
-        if image[-4:] in file_extensions:
-            images_full_path.append(image_directory + os.sep + image)
+    for image_path in images_paths:
+        if image_path.split('.')[-1] in file_extensions:
+            images_full_path.append(f'{image_directory}/{image_path}')
 
     return images_full_path
 
@@ -71,7 +72,12 @@ def create_feature_list(image_paths: [str]):
 
     extractor = hand_crafted_features()
 
-    for path in image_paths:
+    for idx, path in enumerate(image_paths):
+        print_progress_bar(iteration=idx,
+                           total=len(image_paths) - 1,
+                           header='Creating feature list:',
+                           footer='Feature list created!')
+
         img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
         features = extractor.extract(img)
         result.append(features)
@@ -103,22 +109,24 @@ def write_to_file(feature_list, image_paths, output_path):
     file_path = output_path + os.sep + "features.csv"
 
     with open(file_path, "w") as file:
-        for i in range(len(feature_list)):
-            if not i == 0:
+        for idx, features in enumerate(feature_list):
+            print_progress_bar(iteration=idx,
+                               total=len(feature_list) - 1,
+                               header='Writing to file:',
+                               footer='Write complete!')
+
+            if not idx == 0:
                 file.write('\n')
 
-            sys.stdout.write("\rFile:" + str(i) + "/" + str(len(feature_list)))
+            output = image_paths[idx]
 
-            output = image_paths[i]
-
-            for feature in feature_list[i]:
+            for feature in features:
                 output += ';' + str(feature)
+
             file.write(output)
 
-            sys.stdout.flush()
 
-
-def preprocessing_main(image_directory, output_path, file_extensions=(".png", ".jpg")):
+def preprocessing_main(image_directory, output_path, file_extensions=("png", "jpg")):
     """
     Function which calls 'get_images_paths', 'create_feature_list' and 'write_to_file'
     """
@@ -131,5 +139,5 @@ def preprocessing_main(image_directory, output_path, file_extensions=(".png", ".
 
 
 if __name__ == '__main__':
-    preprocessing_main(image_directory=IMAGES_DIR, output_path="static")
-    print("\nWrite complete")
+    print(IMAGES_DIR)
+    preprocessing_main(image_directory=IMAGES_DIR, output_path="website/static/data")

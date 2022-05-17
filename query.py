@@ -1,3 +1,5 @@
+import os
+
 from hand_crafted_features import hand_crafted_features
 # from ae import auto_encoder
 from searcher import Searcher
@@ -6,20 +8,19 @@ from pathlib import Path
 import csv
 import numpy as np
 
-QUERY_IMAGE = 'images (training)/1880.png'
+QUERY_IMAGE = 'data/images/training/1880.png'
+INDEX = f'website/static/data{os.sep}features.csv'
+
 
 class Query:
 
-    def __init__(self, path_to_index):
+    def __init__(self):
         """
         Init function of the Query class. Sets 'path_to_index' to the class variable 'path_to_index'.
         Class variables 'query_image_name' and 'results' are set to None.
         Parameters
-        ----------
-        path_to_index : string
-            Path to the index file.
         """
-        self.__path_to_index = path_to_index
+        self.__path_to_index = INDEX
         self.__query_image_name = None
         self.__results = None
         self.__query_image = None
@@ -88,7 +89,7 @@ class Query:
 
 
 if __name__ == "__main__":
-    query = Query(path_to_index="static/features.csv")
-    query.set_image_name(query_image_name=QUERY_IMAGE)
-    query_result = query.run()
-    print("Retrieved images: ", query_result)
+    query = Query()
+    query.set_image_name(QUERY_IMAGE)
+    query_results = query.run()
+    print("Retrieved images: ", query_results)
