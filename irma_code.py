@@ -143,7 +143,7 @@ class IRMA:
                     try:
                         list_acc.append(dictionary[code_acc])
                     except KeyError:
-                        list_acc.append(f'Invalid key: {code_acc}')
+                        list_acc.append(f'[invalid_key_({code_acc})]')
 
             result[label] = list_acc
 

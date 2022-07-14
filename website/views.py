@@ -79,6 +79,8 @@ def start_query():
 
     query_results = handler.query(img_path)
 
+    print(query_results)
+
     return render_template("query_result.html",
                            selected_image=selected_image,
                            query_results=query_results)

@@ -29,7 +29,7 @@ def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, lengt
     filled_length = int(length * iteration // total)
     bar = fill * filled_length + '-' * (length - filled_length - 1)
 
-    print(color + f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
+    print(color + f'\r{prefix} |{bar}| {percent}% {suffix} ({iteration}/{total})', end=print_end)
 
     if iteration == total:
         print(colorama.Fore.GREEN + f'{prefix} |{bar}| {percent}% {suffix}')

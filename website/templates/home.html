@@ -1,41 +1,46 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <div class="col-sm-9">
-        <h1 class="page-header">Input image</h1>
-
-        {% if selected_image %}
-		    <img src="{{ url_for('static', filename = 'queries/' + selected_image) }}"
-                 style="max-height: 200px;
+<div class="text-center">
+    <div class="row justify-content-md-center">
+    <h1 class="page-header">Input image</h1>
+    </div>
+    {% if selected_image %}
+        <div class="row justify-content-md-center">
+            <img src="{{ url_for('static', filename = 'queries/' + selected_image) }}"
+                 style="max-height: 300px;
                  width: auto"
                  alt="">
-        {% else %}
+        </div>
+    {% else %}
+        <div class="row justify-content-md-center">
             <img src="{{ url_for('static', filename = 'assets/empty.png')}}"
-                 style="max-height: 200px;
+                 style="max-height: 300px;
                  width: auto"
                  alt="">
+        </div>
+        <div class="row justify-content-md-center">
             <p>Select an image via the file selector and press upload. Afterwards you can retrieve similar images.</p>
-        {% endif %}
+        </div>
+    {% endif %}
 
-
-
-        <div class="row">
-            <div class="col">
-                <form id="upload-form"
-                      action="{{ url_for('views.select_query_image') }}"
-                      method="POST"
-                      enctype="multipart/form-data">
-                    <input class="button"
-                           id="file-selector"
-                           type="file"
-                           name="file"
-                           accept="image/*"
-                           multiple>
-                    <button type="submit"
-                            class="btn btn-primary">Upload!</button>
-                </form>
-            </div>
-        <div class="col">
+    <div class="row justify-content-md-center">
+        <div class="col-5">
+            <form id="upload-form"
+                  action="{{ url_for('views.select_query_image') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+                <input class="button"
+                       id="file-selector"
+                       type="file"
+                       name="file"
+                       accept="image/*"
+                       multiple>
+                <button type="submit"
+                        class="btn btn-primary">Upload!</button>
+            </form>
+        </div>
+        <div class="col-md-auto">
             {% if selected_image %}
                  <form id="upload-form"
                       action="{{ url_for('views.start_query') }}"
@@ -45,14 +50,8 @@
                             class="btn btn-primary" >Retrieve</button>
                 </form>
             {% endif %}
-
-            
-          </form>
         </div>
-        
-      </div>
     </div>
-  </div>
 </div>
 
 {% endblock %}

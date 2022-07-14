@@ -8,8 +8,8 @@ from pathlib import Path
 import csv
 import numpy as np
 
-QUERY_IMAGE = 'data/images/training/1880.png'
-INDEX = f'website/static/data{os.sep}features.csv'
+QUERY_IMAGE = f'data{os.sep}images{os.sep}training{os.sep}1880.png'
+INDEX = f'website{os.sep}static{os.sep}data{os.sep}features.csv'
 
 
 class Query:
@@ -87,6 +87,84 @@ class Query:
 
         return self.__results[:limit]
 
+    def relevance_feedback(self, selected_images, not_selected_images, limit=10) -> list:
+        """
+        Function to start a relevance feedback query.
+        Parameters
+        ----------
+        selected_images : list
+            List of selected images.
+        not_selected_images : list
+            List of not selected images.
+        limit : int
+            Amount of results that will be retrieved. Default: 10.
+        Returns
+        -------
+        - results : list
+            List with the 'limit' first elements of the 'results' list.
+        """
+
+        if not self.__results:
+            sr = Searcher(self.__path_to_index)
+            relevant = self.get_feature_vector(selected_images)
+            non_relevant = self.get_feature_vector(not_selected_images)
+            modified_features = rocchio(self.features, relevant, non_relevant)
+            results = sr.search(modified_features)
+            self.__results = results
+            return self.__results[:limit]
+
+    def get_feature_vector(self, image_names) -> list:
+        """
+        Function to get features from 'index' file for given image names.
+        Parameters
+        ----------
+        image_names : list
+            List of images names.
+        Returns
+        -------
+        - features : list
+            List with of features.
+        """
+        features = []
+
+        with open(self.__path_to_index) as file:
+            data = csv.reader(file)
+            list_of_features = {row[0]: row[1:] for row in data}
+
+            for image in image_names:
+                features.append(list_of_features.get(image))
+
+            return features
+
+
+def rocchio(original_query, relevant, non_relevant, a=1, b=0.8, c=0.1) -> list:
+    """
+    Function to adapt features with rocchio approach.
+    Parameters
+    ----------
+    original_query : list
+        Features of the original query.
+    relevant : list
+        Features of the relevant images.
+    non_relevant : list
+        Features of the non relevant images.
+    a : int
+        Rocchio parameter.
+    b : int
+        Rocchio parameter.
+    c : int
+        Rocchio parameter.
+    Returns
+    -------
+    - features : list
+        List with of features.
+    """
+
+    modified_query = a * original_query
+    modified_query += b * 1 / len(relevant) * np.sum(relevant, axis=0)
+    modified_query -= c * 1 / len(non_relevant) * np.sum(non_relevant, axis=0)
+
+    return modified_query
 
 if __name__ == "__main__":
     query = Query()
